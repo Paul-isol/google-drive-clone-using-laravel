@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
 import type { BreadcrumbItem } from '@/types';
 import { Search } from 'lucide-vue-next';
+import { useForm } from '@inertiajs/vue3';
+
 withDefaults(
     defineProps<{
         breadcrumbs?: BreadcrumbItem[];
@@ -12,22 +18,33 @@ withDefaults(
         breadcrumbs: () => [],
     },
 );
+const form = useForm({
+    search: '',
+});
 </script>
 
 <template>
     <header
-        class="flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
+        class="flex h-16 shrink-0 items-center gap-4 border-b border-sidebar-border/70 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
     >
-        <div class="flex items-center gap-2">
-            <SidebarTrigger class="-ml-1" />
+        <!-- Left: trigger + breadcrumbs -->
+        <div class="flex min-w-0 items-center gap-2">
+            <SidebarTrigger class="-ml-1 shrink-0" />
             <template v-if="breadcrumbs && breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
-            <!-- search bar -->
-            <InputGroup>
-                <InputGroupInput placeholder="Search..." />
+        </div>
+
+        <!-- Right: search bar -->
+        <div class="ml-auto flex items-center">
+            <InputGroup class="w-56 lg:w-72">
+                <InputGroupInput
+                    placeholder="Search..."
+                    v-model="form.search"
+                    autocomplete
+                />
                 <InputGroupAddon>
-                    <Search />
+                    <Search class="size-4" />
                 </InputGroupAddon>
             </InputGroup>
         </div>

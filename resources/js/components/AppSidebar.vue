@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next';
+import {
+    BookOpen,
+    FolderGit2,
+    Star,
+    Trash,
+    Users,
+    Folder,
+    FolderPlus,
+    FolderUp,
+    FileUp,
+    Plus,
+} from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -13,15 +24,40 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarGroup
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, myfiles } from '@/routes';
 import type { NavItem } from '@/types';
+import Button from './ui/button/Button.vue';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'My Drive',
+        href: myfiles(),
+        icon: Folder,
+    },
+    {
+        title: 'Shared with me',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: Users,
+    },
+    {
+        title: 'Starred',
+        href: dashboard(),
+        icon: Star,
+    },
+    {
+        title: 'Trash',
+        href: dashboard(),
+        icon: Trash,
     },
 ];
 
@@ -52,6 +88,35 @@ const footerNavItems: NavItem[] = [
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarHeader>
+        <SidebarMenu>
+            <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                    <SidebarGroup class="px-2 py-0">
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton class="p-4 border-2 border-white">
+                                   <Plus />Create New
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroup>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" class="w-56">
+                    <DropdownMenuItem class="p-2">
+                        <FolderPlus />
+                        New Folder
+                    </DropdownMenuItem>
+                    <DropdownMenuItem class="p-2">
+                        <FolderUp />
+                        Upload Folder
+                    </DropdownMenuItem>
+                    <DropdownMenuItem class="p-2">
+                        <FileUp />
+                        Upload Files
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </SidebarMenu>
 
         <SidebarContent>
             <NavMain :items="mainNavItems" />
