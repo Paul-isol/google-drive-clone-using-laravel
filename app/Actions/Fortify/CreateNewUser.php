@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Models\File;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -24,10 +25,19 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
         ]);
+
+        $file = new File;
+        $file->name = $input['email'];
+        $file->is_folder = 1;
+        $file->created_by = $user->id;
+        $file->updated_by = $user->id;
+        $file->makeRoot()->save();
+
+        return $user;
     }
 }

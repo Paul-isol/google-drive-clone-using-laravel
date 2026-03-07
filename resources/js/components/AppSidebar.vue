@@ -26,7 +26,7 @@ import {
     SidebarMenuItem,
     SidebarGroup
 } from '@/components/ui/sidebar';
-import { dashboard, myfiles } from '@/routes';
+import { dashboard, myfiles, sharedByMe, sharedWithMe, trash } from '@/routes';
 import type { NavItem } from '@/types';
 import Button from './ui/button/Button.vue';
 import {
@@ -46,17 +46,17 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Shared with me',
-        href: dashboard(),
+        href: sharedWithMe(),
         icon: Users,
     },
     {
         title: 'Starred',
-        href: dashboard(),
+        href: sharedByMe(),
         icon: Star,
     },
     {
         title: 'Trash',
-        href: dashboard(),
+        href: trash(),
         icon: Trash,
     },
 ];
