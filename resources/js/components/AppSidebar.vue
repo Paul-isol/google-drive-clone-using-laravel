@@ -28,13 +28,10 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, myfiles, sharedByMe, sharedWithMe, trash } from '@/routes';
 import type { NavItem } from '@/types';
-import Button from './ui/button/Button.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
