@@ -20,8 +20,8 @@ return new class extends Migration
             $table->boolean('is_folder');
             $table->string('size')->nullable();
             $table->string('mime')->nullable();
-            $table->foreignIdFor(User::class,'created_by');
-            $table->foreignIdFor(User::class,'updated_by');
+            $table->foreignIdFor(User::class, 'created_by');
+            $table->foreignIdFor(User::class, 'updated_by');
             $table->timestamps();
             $table->softDeletes();
         });

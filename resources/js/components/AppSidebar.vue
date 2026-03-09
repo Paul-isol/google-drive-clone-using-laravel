@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import {
     BookOpen,
     FolderGit2,
@@ -24,7 +25,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarGroup
+    SidebarGroup,
 } from '@/components/ui/sidebar';
 import { dashboard, myfiles, sharedByMe, sharedWithMe, trash } from '@/routes';
 import type { NavItem } from '@/types';
@@ -34,7 +35,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-
+import CreateFolderModal from './CreateFolderModal.vue';
 const mainNavItems: NavItem[] = [
     {
         title: 'My Drive',
@@ -61,7 +62,7 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        href: 'https://github.com/Paul-isol',
         icon: FolderGit2,
     },
     {
@@ -70,6 +71,11 @@ const footerNavItems: NavItem[] = [
         icon: BookOpen,
     },
 ];
+
+const createFolderModal = ref(false);
+function showCreateFolderModal() {
+    createFolderModal.value = true;
+}
 </script>
 
 <template>
@@ -91,18 +97,23 @@ const footerNavItems: NavItem[] = [
                     <SidebarGroup class="px-2 py-0">
                         <SidebarMenu>
                             <SidebarMenuItem>
-                                <SidebarMenuButton class="p-4 border-2 border-white">
-                                   <Plus />Create New
+                                <SidebarMenuButton
+                                    class="border-2 border-white p-4"
+                                >
+                                    <Plus />Create New
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroup>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" class="w-56">
-                    <DropdownMenuItem class="p-2">
-                        <FolderPlus />
-                        New Folder
-                    </DropdownMenuItem>
+                    <a href="#" @click.prevent="showCreateFolderModal()">
+                        <DropdownMenuItem class="p-2">
+                            <FolderPlus />
+                            New Folder
+                        </DropdownMenuItem>
+                    </a>
+
                     <DropdownMenuItem class="p-2">
                         <FolderUp />
                         Upload Folder
@@ -124,5 +135,6 @@ const footerNavItems: NavItem[] = [
             <NavUser />
         </SidebarFooter>
     </Sidebar>
+    <CreateFolderModal v-model="createFolderModal" />
     <slot />
 </template>
