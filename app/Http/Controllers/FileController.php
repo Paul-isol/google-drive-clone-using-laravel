@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
 {
-    public function index()
+    public function index(?string $folder = null)
     {
-        $folder = $this->getRoot();
+        if ($folder) {
+            $folder = File::query()
+                ->where('created_by', Auth::id())
+                ->where('path', $folder)
+                ->firstOrFail();
+        }
+
+        if (! $folder) {
+            $folder = $this->getRoot();
+        }
         $files = File::query()
             ->where('parent_id', $folder->id)
             ->where('created_by', Auth::id())
@@ -19,10 +28,10 @@ class FileController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
         $files = FileResource::collection($files);
+        $ancestors = FileResource::collection([...$folder->ancestors, $folder]);
+        $folder = new FileResource($folder);
 
-        return inertia('Myfiles', [
-            'files' => $files,
-        ]);
+        return inertia('Myfiles', compact('files', 'folder', 'ancestors'));
     }
 
     public function createFolder(StoreFolderRequest $request)
@@ -41,7 +50,7 @@ class FileController extends Controller
         $parent->appendNode($file);
         $file->save();
 
-        return redirect()->route('myfiles');
+        return redirect()->route('myfiles', ['folder' => $parent->path]);
     }
 
     private function getRoot(): File

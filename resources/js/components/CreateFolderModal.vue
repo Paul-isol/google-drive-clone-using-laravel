@@ -71,7 +71,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from './InputError.vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import Spinner from './ui/spinner/Spinner.vue';
 import { createFolder as createFolderAction } from '@/actions/App/Http/Controllers/FileController';
 const props = defineProps({
@@ -86,11 +86,18 @@ const emit = defineEmits(['update:modelValue']);
 const isDesktop = useMediaQuery('(min-width: 640px)');
 const isOpen = ref(false);
 
-const form = useForm({
+const form = useForm<{
+    name: string;
+    parent_id: number | null;
+}>({
     name: '',
+    parent_id: null,
 });
+const page = usePage();
 function createFolder() {
+    form.parent_id = page.props.folder?.id ?? null;
     form.post(createFolderAction().url, {
+        preserveScroll: true,
         onSuccess: () => {
             isOpen.value = false;
             form.reset();

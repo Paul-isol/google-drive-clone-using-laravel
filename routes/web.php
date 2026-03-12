@@ -10,7 +10,9 @@ Route::inertia('/', 'Welcome', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
-    Route::get('myfiles', [FileController::class, 'index'])->name('myfiles');
+    Route::get('myfiles/{folder?}', [FileController::class, 'index'])
+        ->where('folder', '(.*)')
+        ->name('myfiles');
     Route::inertia('shared-with-me', 'SharedWithMe')->name('shared-with-me');
     Route::inertia('shared-by-me', 'SharedByMe')->name('shared-by-me');
     Route::inertia('trash', 'Trash')->name('trash');

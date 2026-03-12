@@ -31,7 +31,7 @@ class StoreFolderRequest extends ParentIdBaseRequest
                                 ->where('created_by', Auth::id())
                                 ->value('id');
 
-                            $query->where('created_by', Auth::id())
+                            return $query->where('created_by', Auth::id())
                                 ->where('parent_id', $parentId)
                                 ->whereNull('deleted_at');
                         }),
