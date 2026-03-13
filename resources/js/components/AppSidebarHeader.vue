@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import { useForm } from '@inertiajs/vue3';
+import { Search } from 'lucide-vue-next';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
     InputGroup,
     InputGroupAddon,
     InputGroupInput,
 } from '@/components/ui/input-group';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem } from '@/types';
-import { Search } from 'lucide-vue-next';
-import { useForm } from '@inertiajs/vue3';
 
 withDefaults(
     defineProps<{

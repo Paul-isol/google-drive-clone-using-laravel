@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import { Head, router, useForm, Link } from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
-import { myfiles } from '@/routes';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    TableHeader,
-} from '@/components/ui/table';
+import { Head, router, Link } from '@inertiajs/vue3';
 import { 
     Folder, 
     FileText, 
@@ -21,22 +10,32 @@ import {
     FilePlus,
 } from 'lucide-vue-next';
 import {
+  Breadcrumb,
+  BreadcrumbItem as BDItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
     DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import {
-  Breadcrumb,
-  BreadcrumbItem as BDItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-const props = defineProps<{
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TableHeader,
+} from '@/components/ui/table';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { myfiles } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
+defineProps<{
     files: any;
     folder: any;
     ancestors: any;
@@ -56,10 +55,7 @@ function openFolder(file: any) {
     router.visit(myfiles({ folder: file.path }).url);
 }
 
-const form = useForm({
-    name: '',
-    parent_id: props.folder.id
-});
+
 
 
 </script>
@@ -79,7 +75,7 @@ const form = useForm({
             <nav>
                 <Breadcrumb>
                     <BreadcrumbList>
-                        <template v-for="(ans, index) in ancestors.data" :key="ans.id">
+                        <template v-for="ans in ancestors.data" :key="ans.id">
                             <BDItem>
                                 <BreadcrumbLink as-child>
                                     <Link :href="myfiles({ folder: ans.path }).url">

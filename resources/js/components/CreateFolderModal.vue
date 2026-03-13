@@ -47,8 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { useMediaQuery } from '@vueuse/core';
+import { computed, ref, watch } from 'vue';
+import { createFolder as createFolderAction } from '@/actions/App/Http/Controllers/FileController';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -71,9 +73,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from './InputError.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
 import Spinner from './ui/spinner/Spinner.vue';
-import { createFolder as createFolderAction } from '@/actions/App/Http/Controllers/FileController';
 const props = defineProps({
     modelValue: {
         type: Boolean,

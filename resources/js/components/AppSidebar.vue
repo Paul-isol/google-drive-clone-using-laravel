@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import {
     BookOpen,
     FolderGit2,
@@ -13,6 +12,7 @@ import {
     FileUp,
     Plus,
 } from 'lucide-vue-next';
+import { ref } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -29,13 +29,13 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, myfiles, sharedByMe, sharedWithMe, trash } from '@/routes';
 import type { NavItem } from '@/types';
+import CreateFolderModal from './CreateFolderModal.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import CreateFolderModal from './CreateFolderModal.vue';
 const mainNavItems: NavItem[] = [
     {
         title: 'My Drive',
