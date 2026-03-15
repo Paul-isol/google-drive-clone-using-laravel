@@ -18,6 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('trash', 'Trash')->name('trash');
 
     Route::post('folder/create', [FileController::class, 'createFolder'])->name('folder.create');
+    Route::post('file/upload', [FileController::class, 'upload'])->name('file/upload');
 });
 
 require __DIR__.'/settings.php';

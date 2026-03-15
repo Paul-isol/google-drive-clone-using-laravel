@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Resources\FileResource;
 use App\Models\File;
@@ -34,6 +35,36 @@ class FileController extends Controller
         return inertia('Myfiles', compact('files', 'folder', 'ancestors'));
     }
 
+    public function upload(StoreFileRequest $request)
+    {
+        $data = $request->validated();
+        $fileTree = $request->file_tree;
+        $parent = $request->parent;
+        $user = Auth::user();
+        if (! $parent) {
+            $parent = $this->getRoot();
+        }
+        if (! empty($fileTree)) {
+            $this->saveFileTree($fileTree, $parent, $user);
+        } else {
+            foreach ($data['files'] as $file) {
+                $path = $file->store('files/'.$user->id);
+                $model = new File;
+                $model->name = $file->getClientOriginalName();
+                $model->storage_path = $path;
+                $model->is_folder = 0;
+                $model->mime = $file->getMimeType();
+                $model->size = $file->getSize();
+                $model->created_by = Auth::id();
+                $model->updated_by = Auth::id();
+
+                $parent->appendNode($model);
+            }
+        }
+
+        // return redirect()->route('myfiles', ['folder' => $parent->path]);
+    }
+
     public function createFolder(StoreFolderRequest $request)
     {
         $data = $request->validated();
@@ -59,6 +90,34 @@ class FileController extends Controller
             ->whereNull('parent_id')
             ->where('created_by', Auth::id())
             ->first() ?? $this->createRoot();
+    }
+
+    public function saveFileTree($fileTree, $parent, $user)
+    {
+        foreach ($fileTree as $name => $file) {
+            if (is_array($file)) {
+                $folder = new File;
+                $folder->is_folder = 1;
+                $folder->name = $name;
+                $folder->created_by = Auth::id();
+                $folder->updated_by = Auth::id();
+
+                $parent->appendNode($folder);
+                $this->saveFileTree($file, $folder, $user);
+            } else {
+                $path = $file->store('files/'.$user->id);
+                $model = new File;
+                $model->name = $name;
+                $model->storage_path = $path;
+                $model->is_folder = 0;
+                $model->mime = $file->getMimeType();
+                $model->size = $file->getSize();
+                $model->created_by = Auth::id();
+                $model->updated_by = Auth::id();
+
+                $parent->appendNode($model);
+            }
+        }
     }
 
     private function createRoot(): File

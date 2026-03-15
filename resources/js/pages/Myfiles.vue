@@ -8,6 +8,7 @@ import {
     Trash2, 
     Share2, 
     FilePlus,
+    Home,
 } from 'lucide-vue-next';
 import {
   Breadcrumb,
@@ -75,6 +76,7 @@ function openFolder(file: any) {
             <nav>
                 <Breadcrumb>
                     <BreadcrumbList>
+                        <Home size="16" />
                         <template v-for="ans in ancestors.data" :key="ans.id">
                             <BDItem>
                                 <BreadcrumbLink as-child>

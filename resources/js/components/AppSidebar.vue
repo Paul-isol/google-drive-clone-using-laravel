@@ -8,12 +8,12 @@ import {
     Users,
     Folder,
     FolderPlus,
-    FolderUp,
-    FileUp,
     Plus,
 } from 'lucide-vue-next';
 import { ref } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
+import FileUploadMenuItem from '@/components/FileUploadMenuItem.vue';
+import FolderUploadMenuItem from '@/components/FolderUploadMenuItem.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -113,15 +113,8 @@ function showCreateFolderModal() {
                             New Folder
                         </DropdownMenuItem>
                     </a>
-
-                    <DropdownMenuItem class="p-2">
-                        <FolderUp />
-                        Upload Folder
-                    </DropdownMenuItem>
-                    <DropdownMenuItem class="p-2">
-                        <FileUp />
-                        Upload Files
-                    </DropdownMenuItem>
+                    <FolderUploadMenuItem />
+                    <FileUploadMenuItem />
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenu>
