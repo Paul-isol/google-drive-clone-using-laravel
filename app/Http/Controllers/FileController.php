@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyFilesRequest;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Resources\FileResource;
 use App\Models\File;
 use Illuminate\Support\Facades\Auth;
-
+use Inertia\Inertia;
 class FileController extends Controller
 {
     public function index(?string $folder = null)
@@ -27,12 +28,16 @@ class FileController extends Controller
             ->where('created_by', Auth::id())
             ->orderBy('is_folder', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate(10);
         $files = FileResource::collection($files);
         $ancestors = FileResource::collection([...$folder->ancestors, $folder]);
         $folder = new FileResource($folder);
 
-        return inertia('Myfiles', compact('files', 'folder', 'ancestors'));
+        return inertia('Myfiles', [
+            'files' => Inertia::scroll($files),
+            'folder' => $folder,
+            'ancestors' => $ancestors,
+        ]);
     }
 
     public function upload(StoreFileRequest $request)
@@ -84,6 +89,26 @@ class FileController extends Controller
         return redirect()->route('myfiles', ['folder' => $parent->path]);
     }
 
+    public function destroy(DestroyFilesRequest $request) {
+        $data = $request->validated();
+        $parent = $request->parent;
+        
+        if($data['all']) {
+            $children = $parent->children;
+            foreach ($children as $child ){
+                $child->delete();
+            }
+        } else {
+            foreach($data['ids'] ?? [] as $id){
+                $file = File::find($id);
+                if($file){
+                    $file->delete();
+                }
+            }
+        }
+
+        return redirect()->route('myfiles', ['folder' => $parent->path]);
+    }
     private function getRoot(): File
     {
         return File::query()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, router, Link } from '@inertiajs/vue3';
+import { Head, router, Link, InfiniteScroll } from '@inertiajs/vue3';
 import { 
     Folder, 
     FileText, 
@@ -10,6 +10,7 @@ import {
     FilePlus,
     Home,
 } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
 import {
   Breadcrumb,
   BreadcrumbItem as BDItem,
@@ -18,6 +19,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,7 +38,7 @@ import {
 import AppLayout from '@/layouts/AppLayout.vue';
 import { myfiles } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
-defineProps<{
+const props = defineProps<{
     files: any;
     folder: any;
     ancestors: any;
@@ -56,9 +58,18 @@ function openFolder(file: any) {
     router.visit(myfiles({ folder: file.path }).url);
 }
 
+const selectedFiles = ref<Record<string, boolean>>({});
 
-
-
+const allSelected = computed({
+    get() {
+        return props.files.data.length > 0 && props.files.data.every((file: any) => selectedFiles.value[file.id]);
+    },
+    set(val) {
+        props.files.data.forEach((file: any) => {
+            selectedFiles.value[file.id] = val;
+        });
+    }
+});
 </script>
 
 <template>
@@ -76,7 +87,7 @@ function openFolder(file: any) {
             <nav>
                 <Breadcrumb>
                     <BreadcrumbList>
-                        <Home size="16" />
+                        <Home width="16" />
                         <template v-for="ans in ancestors.data" :key="ans.id">
                             <BDItem>
                                 <BreadcrumbLink as-child>
@@ -93,17 +104,21 @@ function openFolder(file: any) {
 
             <!-- Table Container -->
             <div class="rounded-xl border bg-card shadow-sm transition-all duration-300 hover:shadow-md dark:bg-card/50">
-                <Table>
-                    <TableHeader>
+                <InfiniteScroll data="files" items-element="#table-body">
+                    <Table>
+                        <TableHeader>
                         <TableRow class="hover:bg-transparent">
-                            <TableHead class="w-[400px]">Name</TableHead>
-                            <TableHead>Owner</TableHead>
-                            <TableHead>Last Modified</TableHead>
-                            <TableHead>Size</TableHead>
-                            <TableHead class="w-[50px]"></TableHead>
+                            <TableHead class="w-[50px] p-4 font-medium">
+                                <Checkbox v-model="allSelected" />
+                            </TableHead>
+                            <TableHead class="w-[400px] p-4 font-medium">Name</TableHead>
+                            <TableHead class="p-4 font-medium">Owner</TableHead>
+                            <TableHead class="p-4 font-medium">Last Modified</TableHead>
+                            <TableHead class="p-4 font-medium">Size</TableHead>
+                            <TableHead class="w-[50px] p-4 font-medium"></TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody id="table-body">
                         <!-- Empty State -->
                         <TableRow v-if="!files.data.length" class="hover:bg-transparent">
                             <TableCell colspan="5" class="h-96 text-center">
@@ -125,7 +140,11 @@ function openFolder(file: any) {
                             :key="file.id" 
                             @dblclick="openFolder(file)"
                             class="group select-none transition-colors duration-200 cursor-pointer"
+                            :data-state="selectedFiles[file.id] ? 'selected' : undefined"
                         >
+                            <TableCell class="p-4 font-medium">
+                               <Checkbox v-model="selectedFiles[file.id]" />
+                            </TableCell>
                             <TableCell class="p-4 font-medium">
                                 <div class="flex items-center gap-3">
                                     <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/5 text-primary transition-colors group-hover:bg-primary/10">
@@ -179,7 +198,8 @@ function openFolder(file: any) {
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                </Table>
+                    </Table>
+                </InfiniteScroll>
             </div>
         </div>
     </AppLayout>

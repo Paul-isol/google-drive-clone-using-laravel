@@ -11,8 +11,11 @@ function triggerUpload() {
 }
 
 function onFileChange(e: Event) {
-    const files = (e.target as HTMLInputElement).files
-    emitter.emit(FILE_UPLOAD_EVENT, files)
+    const files = (e.target as HTMLInputElement).files;
+    emitter.emit(FILE_UPLOAD_EVENT, files);
+    if (fileInput.value) {
+        fileInput.value.value = '';
+    }
 }
 </script>
 <template>

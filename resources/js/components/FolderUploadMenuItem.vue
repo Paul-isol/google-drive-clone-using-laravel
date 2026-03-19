@@ -13,6 +13,9 @@ function triggerUpload() {
 function onFolderChange(e: Event) {
     const files = (e.target as HTMLInputElement).files;
     emitter.emit(FOLDER_UPLOAD_EVENT, files);
+    if (folderInput.value) {
+        folderInput.value.value = '';
+    }
 }
 </script>
 

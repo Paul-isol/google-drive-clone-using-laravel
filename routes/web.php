@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('folder/create', [FileController::class, 'createFolder'])->name('folder.create');
     Route::post('file/upload', [FileController::class, 'upload'])->name('file/upload');
+    Route::delete('file/destroy', [FileController::class, 'destroy'])->name('file/destroy');
 });
 
 require __DIR__.'/settings.php';

@@ -6,7 +6,7 @@ export type FileData = {
     is_folder: boolean | number;
     mime: string | null;
     size: number | null;
-    path: string | null;
+    path: string | undefined;
     owner: string | null;
     created_by: number;
     updated_by: number;
